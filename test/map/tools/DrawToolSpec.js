@@ -79,6 +79,27 @@ describe('DrawTool', function () {
         });
     }
 
+    function dragDrawByTouch() {
+        var center = map.getCenter();
+
+        var domPosition = GET_PAGE_POSITION(container);
+        var point = map.coordinateToContainerPoint(center).add(domPosition);
+        happen.touchstart(eventContainer, {
+            'clientX':point.x,
+            'clientY':point.y
+        });
+        for (var i = 0; i < 10; i++) {
+            happen.touchmove(eventContainer, {
+                'clientX':point.x - i,
+                'clientY':point.y - i
+            });
+        }
+        happen.touchend(eventContainer, {
+            'clientX':point.x - 10,
+            'clientY':point.y - 10
+        });
+    }
+
     function drawPoint() {
         var center = map.getCenter();
 
@@ -268,6 +289,20 @@ describe('DrawTool', function () {
             drawTool.addTo(map);
             drawTool.on('drawend', drawEnd);
             dragDraw(drawTool);
+        });
+
+        it('can draw FreeHandLinestring with touch', function (done) {
+            function drawEnd(param) {
+                expect(param.geometry instanceof maptalks.LineString).to.be.ok();
+                expect(param.geometry.getLength()).to.above(0);
+                done();
+            }
+            var drawTool = new maptalks.DrawTool({
+                mode : 'FreeHandLinestring'
+            });
+            drawTool.addTo(map);
+            drawTool.on('drawend', drawEnd);
+            dragDrawByTouch(drawTool);
         });
 
         it('can draw FreeHandPolygon', function (done) {
