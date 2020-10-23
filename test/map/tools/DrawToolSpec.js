@@ -248,9 +248,10 @@ describe('DrawTool', function () {
                 expect(param.geometry instanceof maptalks.Polygon).to.be.ok();
                 var coordinates = param.geometry.getCoordinates()[0];
                 expect(coordinates.length === 5).to.be.ok();
-                if (!maptalks.Browser.ie) {
-                    expect(coordinates[1].toArray()).to.be.closeTo([118.846756, 32.046603]);
-                }
+                expect(coordinates[0].toArray()).not.to.be.eql(coordinates[1].toArray());
+                expect(coordinates[1].toArray()).not.to.be.eql(coordinates[2].toArray());
+                expect(coordinates[2].toArray()).not.to.be.eql(coordinates[3].toArray());
+                expect(coordinates[0].toArray()).to.be.eql(coordinates[0].toArray());
                 done();
             }
             var drawTool = new maptalks.DrawTool({
